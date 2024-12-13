@@ -16,7 +16,7 @@ export const databaseProviders = {
             username: pg_config.username,
             password: pg_config.password,
             database: pg_config.database_name,
-            entities: [__dirname + '/Entities/*.entity{.ts,.js}'],
+            entities: [__dirname + '/entities/*.entity{.ts,.js}'],
             synchronize: true,
           });
           await dataSource.initialize();
@@ -45,7 +45,7 @@ export const databaseProviders = {
             username: pg_config.username,
             password: pg_config.password,
             database: pg_config.database_name,
-            entities: [__dirname + '/Entities/*.entity{.ts,.js}'],
+            entities: [__dirname + '/entities/*.entity{.ts,.js}'],
             synchronize: true,
           });
           await dataSource.initialize();
