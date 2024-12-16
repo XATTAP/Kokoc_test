@@ -1,5 +1,5 @@
 import { DataSource } from 'typeorm';
-import configuration from '#/src/config/configuration';
+import { dataSourceOptions } from './dataSources/dataSource.options';
 
 export const databaseProviders = {
   development: [
@@ -8,17 +8,7 @@ export const databaseProviders = {
       inject: [],
       useFactory: async () => {
         try {
-          const pg_config = configuration().pg_database;
-          const dataSource = new DataSource({
-            type: 'postgres',
-            host: pg_config.host,
-            port: pg_config.port,
-            username: pg_config.username,
-            password: pg_config.password,
-            database: pg_config.database_name,
-            entities: [__dirname + '/entities/*.entity{.ts,.js}'],
-            synchronize: true,
-          });
+          const dataSource = new DataSource(dataSourceOptions);
           await dataSource.initialize();
           console.log(
             `Database connected successfully on port ${dataSource.options['port']}`,
@@ -30,34 +20,6 @@ export const databaseProviders = {
         }
       },
     },
-  ],
-  test: [
-    {
-      provide: DataSource,
-      inject: [],
-      useFactory: async () => {
-        try {
-          const pg_config = configuration().pg_database;
-          const dataSource = new DataSource({
-            type: 'postgres',
-            host: pg_config.host,
-            port: pg_config.port,
-            username: pg_config.username,
-            password: pg_config.password,
-            database: pg_config.database_name,
-            entities: [__dirname + '/entities/*.entity{.ts,.js}'],
-            synchronize: true,
-          });
-          await dataSource.initialize();
-          console.log(
-            `Test database connected successfully on port ${dataSource.options['port']}`,
-          );
-          return dataSource;
-        } catch (error) {
-          console.log(`Error connecting to test database\ncode: ${error.code}`);
-          throw error;
-        }
-      },
-    },
-  ],
+  ]
+
 };

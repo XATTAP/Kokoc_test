@@ -9,6 +9,7 @@ import { TypeOrmModule } from '#/src/database/database.module';
   imports: [
     ConfigModule.forRoot({
       load: [configuration],
+      isGlobal: true
     }),
     TypeOrmModule,
   ],

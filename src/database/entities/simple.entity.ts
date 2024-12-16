@@ -5,10 +5,11 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   DeleteDateColumn,
+  BaseEntity,
 } from 'typeorm';
 
 @Entity('Simple')
-export class Simple {
+export class Simple extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
