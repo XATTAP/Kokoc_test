@@ -10,9 +10,10 @@ export const dataSourceOptions: DataSourceOptions = {
   username: process.env.POSTGRES_USERNAME || 'postgres',
   password: process.env.POSTGRES_PASSWORD || 'postgres',
   database: process.env.POSTGRES_DATABASE || 'pg_db',
-  entities: ['**/*.entity.ts'],
-  migrations: ['./src/database/migrations/*.ts'],
-  synchronize: process.env.SYNCRONIZE_DB?.toLowerCase() === 'true' ? true : false,
+  entities: [__dirname + '**/entities/*.entity{.ts,.js}'],
+  migrations: [__dirname + '**/migrations/*{.ts,.js}'],
+  synchronize:
+    process.env.SYNCRONIZE_DB?.toLowerCase() === 'true' ? true : false,
   logging: process.env.LOGGING_DB?.toLowerCase() === 'true' ? true : false,
 };
 

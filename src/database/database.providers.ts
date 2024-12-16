@@ -1,5 +1,5 @@
 import { DataSource } from 'typeorm';
-import { dataSourceOptions } from './dataSources/dataSource.options';
+import { dataSourceOptions } from '#/src/database/dataSource.options';
 
 export const databaseProviders = {
   development: [

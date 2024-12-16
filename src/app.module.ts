@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
 import configuration from '#/src/config/configuration';
 import { TypeOrmModule } from '#/src/database/database.module';
+import { SimpleModule } from '#/src/modules/simple/simple.module';
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { TypeOrmModule } from '#/src/database/database.module';
       isGlobal: true,
     }),
     TypeOrmModule,
+    SimpleModule,
   ],
   controllers: [AppController],
   providers: [AppService],
