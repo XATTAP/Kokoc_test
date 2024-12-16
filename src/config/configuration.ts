@@ -1,6 +1,6 @@
-import { config } from "dotenv"
+import { config } from 'dotenv';
 
-config()
+config();
 
 export default () => ({
   port: parseInt(process.env.SERVER_PORT, 10) || 3000,

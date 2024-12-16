@@ -1,7 +1,7 @@
-import { DataSource, DataSourceOptions } from "typeorm";
-import { config } from "dotenv"
+import { DataSource, DataSourceOptions } from 'typeorm';
+import { config } from 'dotenv';
 
-config()
+config();
 
 export const dataSourceOptions: DataSourceOptions = {
   type: 'postgres',
@@ -14,8 +14,8 @@ export const dataSourceOptions: DataSourceOptions = {
   migrations: ['./src/database/migrations/*.ts'],
   synchronize: process.env.SYNCRONIZE_DB?.toLowerCase() === 'true' ? true : false,
   logging: process.env.LOGGING_DB?.toLowerCase() === 'true' ? true : false,
-}
+};
 
-const dataSource = new DataSource(dataSourceOptions)
+const dataSource = new DataSource(dataSourceOptions);
 
-export default dataSource
+export default dataSource;
