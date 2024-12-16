@@ -3,7 +3,6 @@ import { faker } from '@faker-js/faker';
 
 export class Migration1734340928527 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
-    let count = 0;
     for (let i = 0; i < Number(process.env.SEEDS_NUMBER) || 100; i++) {
       const title = faker.lorem.word();
       const createdAt = faker.date.past({ years: 2 });
@@ -17,9 +16,7 @@ export class Migration1734340928527 implements MigrationInterface {
         `INSERT INTO "Simple"("title", "createdAt", "updatedAt", "deletedAt") VALUES($1, $2, $3, $4)`,
         [title, createdAt, updatedAt, deletedAt],
       );
-      count++;
     }
-    console.log('COUNT: ', count);
   }
 
   public async down(): Promise<void> {}
