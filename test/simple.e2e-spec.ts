@@ -8,6 +8,7 @@ import {
 } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from './../src/app.module';
+import { randomUUID } from 'crypto';
 
 let app: INestApplication;
 beforeAll(async () => {
@@ -75,11 +76,48 @@ describe('Simple Controller (e2e)', () => {
 
   // ====================================
 
+  describe('(GET) /simples/:id - get Simple by id', () => {
+
+    // ====================================
+
+    it('HTTP 200 - OK', async () => {
+      const body = { title: 'test' };
+
+      const id = (await request(app.getHttpServer())
+        .post('/simples')
+        .send(body)
+        .expect(201)).body.raw[0]?.id
+
+      expect(id).toBeDefined()
+      
+      const result = await request(app.getHttpServer())
+        .get('/simples/' + id)
+        .expect(200);
+      expect(result.body.id).toBeDefined()
+    })
+
+    // ====================================
+
+    it('HTTP 404 - Not Found', async () => {
+      const id = randomUUID()
+
+      await request(app.getHttpServer())
+        .delete('/simples/' + id)
+      
+      const result = await request(app.getHttpServer())
+        .get('/simples/' + id)
+        .expect(404);
+    })
+    
+  })
+
+  // ====================================
+
   describe('(POST) /simples - create new Simple', () => {
     // ====================================
 
     it('HTTP 200 - OK', async () => {
-      const body = { title: 'qw' };
+      const body = { title: 'test' };
 
       const result = await request(app.getHttpServer())
         .post('/simples')
@@ -98,4 +136,44 @@ describe('Simple Controller (e2e)', () => {
         .expect(400);
     });
   });
+
+  // ====================================
+
+  describe('(PATCH) /simples/:id - update Simple', () => {
+    // ====================================
+    it('HTTP 200 - OK', async () => {
+      const body = { title: 'new title' };
+
+      const id = (await request(app.getHttpServer())
+        .post('/simples')
+        .send(body)
+        .expect(201)).body.raw[0]?.id
+
+      expect(id).toBeDefined()
+
+      const result = await request(app.getHttpServer())
+      .patch('/simples/' + id)
+      .send(body)
+      .expect(200)
+    })
+  })
+
+  // ====================================
+
+  describe('(DELETE) /simples/:id - delete Simple', () => {
+    it('HTTP 200 - OK', async () => {
+      const body = { title: 'new title' };
+
+      const id = (await request(app.getHttpServer())
+      .post('/simples')
+      .send(body)
+      .expect(201)).body.raw[0]?.id
+
+      expect(id).toBeDefined()
+
+      const result = await request(app.getHttpServer())
+      .delete('/simples/' + id)
+      .expect(200)
+    }, 10000*10000)
+  })
 });
