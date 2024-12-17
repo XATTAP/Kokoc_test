@@ -5,6 +5,7 @@ import {
   Delete,
   Get,
   Param,
+  ParseUUIDPipe,
   Patch,
   Post,
   Query,
@@ -29,7 +30,7 @@ export class SimpleController {
 
   @Get(':id')
   @ApiOperation({ summary: 'Получение сущности по ее id' })
-  findById(@Param('id') id: string) {
+  findById(@Param('id', ParseUUIDPipe) id: string) {
     return this.simpleService.getById(id);
   }
 
@@ -41,13 +42,16 @@ export class SimpleController {
 
   @Patch(':id')
   @ApiOperation({ summary: 'Обновление информации о сущности' })
-  updateUser(@Body() body: UpdateSimpleDto, @Param('id') id: string) {
+  updateUser(
+    @Body() body: UpdateSimpleDto,
+    @Param('id', ParseUUIDPipe) id: string,
+  ) {
     return this.simpleService.update(id, body);
   }
 
   @Delete(':id')
   @ApiOperation({ summary: 'Удаление сущности' })
-  deleteUser(@Param('id') id: string) {
+  deleteUser(@Param('id', ParseUUIDPipe) id: string) {
     return this.simpleService.delete(id);
   }
 }

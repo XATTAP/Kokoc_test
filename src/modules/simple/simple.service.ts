@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import {
   CreateSimpleDto,
   QueryListSimpleDto,
@@ -43,7 +43,7 @@ export class SimpleService {
     };
   }
   async getById(id: string) {
-    const simple = this.simpleRepository
+    const simple = await this.simpleRepository
       .createQueryBuilder()
       .select()
       .addSelect(
@@ -51,7 +51,12 @@ export class SimpleService {
         'Simple_difference',
       )
       .where('id = :id', { id })
-      .getOneOrFail();
+      .getOne();
+
+    if (!simple) {
+      throw new NotFoundException(`Simple with id: ${id} not found`);
+    }
+
     return simple;
   }
   async create(body: CreateSimpleDto) {
@@ -65,21 +70,23 @@ export class SimpleService {
     return result;
   }
   async update(id: string, body: UpdateSimpleDto) {
+    const simple = await this.getById(id);
     const result = await this.simpleRepository
       .createQueryBuilder()
       .update(Simple)
       .set(body)
-      .where('id = :id', { id })
+      .where('id = :id', { id: simple.id })
       .execute();
 
     return result;
   }
   async delete(id: string) {
+    const simple = await this.getById(id);
     const result = await this.simpleRepository
       .createQueryBuilder()
       .delete()
       .from(Simple)
-      .where('id = :id', { id })
+      .where('id = :id', { id: simple.id })
       .execute();
 
     return result;
