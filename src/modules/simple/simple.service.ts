@@ -1,6 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Search } from '@nestjs/common';
 import {
   CreateSimpleDto,
+  QueryListSimpleDto,
   UpdateSimpleDto,
 } from '#/src/modules/simple/dtos/simple.dto';
 import { Simple } from '#/src/database/entities/simple.entity';
@@ -14,8 +15,21 @@ export class SimpleService {
     private readonly simpleRepository: Repository<Simple>,
   ) {}
 
-  async list(): Promise<Simple[]> {
-    const list = this.simpleRepository.createQueryBuilder().select().getMany();
+  async list(query: QueryListSimpleDto): Promise<Simple[]> {
+    const { search, limit, page } = query;
+    const queryBuilder = this.simpleRepository.createQueryBuilder().select();
+
+    if (search) {
+      queryBuilder.where('LOWER(title) LIKE LOWER(:search)', {
+        search: `%${search}%`,
+      });
+    }
+
+    if (page && limit) {
+      queryBuilder.skip((page - 1) * limit).take(limit);
+    }
+
+    const list = await queryBuilder.getMany();
 
     return list;
   }

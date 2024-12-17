@@ -7,10 +7,12 @@ import {
   Param,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import {
   CreateSimpleDto,
+  QueryListSimpleDto,
   UpdateSimpleDto,
 } from '#/src/modules/simple/dtos/simple.dto';
 
@@ -21,8 +23,8 @@ export class SimpleController {
 
   @Get()
   @ApiOperation({ summary: 'Получение списка сущностей' })
-  findAll() {
-    return this.simpleService.list();
+  findAll(@Query() query: QueryListSimpleDto) {
+    return this.simpleService.list(query);
   }
 
   @Get(':id')
