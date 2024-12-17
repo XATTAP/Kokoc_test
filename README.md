@@ -32,6 +32,10 @@ npm run start
 npm run test:e2e
 ```
 
+При запуске приложения можно открыть swagger по адресу:
+
+{host}:{port}/swagger
+
 ## Задание 2 и 3
 
 Ответы на вопросы лежат в файле ANSWERS.txt
