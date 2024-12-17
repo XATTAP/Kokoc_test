@@ -34,6 +34,7 @@ export class SimpleService {
         'EXTRACT(DAY FROM ("updatedAt" - "createdAt"))',
         'Simple_difference',
       )
+      .orderBy('"createdAt"', 'DESC')
       .getManyAndCount();
 
     return {
