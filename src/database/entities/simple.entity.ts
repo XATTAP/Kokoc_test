@@ -6,6 +6,7 @@ import {
   UpdateDateColumn,
   DeleteDateColumn,
   BaseEntity,
+  VirtualColumn,
 } from 'typeorm';
 
 @Entity('Simple')
@@ -24,4 +25,10 @@ export class Simple extends BaseEntity {
 
   @DeleteDateColumn({ type: 'timestamp', precision: 6, nullable: true })
   deletedAt?: Date;
+
+  @VirtualColumn({
+    query: (alias) =>
+      `EXTRACT(DAY FROM (${alias}."updatedAt" - ${alias}."createdAt"))`,
+  })
+  difference: number;
 }

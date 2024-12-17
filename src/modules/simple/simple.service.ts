@@ -1,4 +1,4 @@
-import { Injectable, Search } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import {
   CreateSimpleDto,
   QueryListSimpleDto,
@@ -15,12 +15,12 @@ export class SimpleService {
     private readonly simpleRepository: Repository<Simple>,
   ) {}
 
-  async list(query: QueryListSimpleDto): Promise<Simple[]> {
+  async list(query: QueryListSimpleDto) {
     const { search, limit, page } = query;
     const queryBuilder = this.simpleRepository.createQueryBuilder().select();
 
     if (search) {
-      queryBuilder.where('LOWER(title) LIKE LOWER(:search)', {
+      queryBuilder.where('LOWER("title") LIKE LOWER(:search)', {
         search: `%${search}%`,
       });
     }
@@ -29,14 +29,27 @@ export class SimpleService {
       queryBuilder.skip((page - 1) * limit).take(limit);
     }
 
-    const list = await queryBuilder.getMany();
+    const result = await queryBuilder
+      .addSelect(
+        'EXTRACT(DAY FROM ("updatedAt" - "createdAt"))',
+        'Simple_difference',
+      )
+      .getManyAndCount();
 
-    return list;
+    return {
+      ...(page !== undefined && limit !== undefined && { page, limit }),
+      total: result[1],
+      data: result[0],
+    };
   }
-  async getById(id: string): Promise<Simple> {
+  async getById(id: string) {
     const simple = this.simpleRepository
       .createQueryBuilder()
       .select()
+      .addSelect(
+        'EXTRACT(DAY FROM ("updatedAt" - "createdAt"))',
+        'Simple_difference',
+      )
       .where('id = :id', { id })
       .getOneOrFail();
     return simple;
